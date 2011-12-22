@@ -86,6 +86,7 @@ div.element > div.end:after {
 div.text {
   font-family: "Helvetica Neue";
   color: black;
+  display: inline-block;
 }
 
 .drop-zone {
