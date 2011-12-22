@@ -86,8 +86,8 @@ h1#win {
   display: none;
 }
 </style>
-<h1>This page is messed up! Can you fix it?</h1>
-<aside>The love bomb below looks scrambled, because its HTML source code is wrong. Just drag and drop parts of the source code that look like <span class="sample-swappable">this</span> to swap them and make things right.</aside>
+<h1 class="scrambled-block">This page is messed up! Can you fix it?</h1>
+<aside class="scrambled-block">The love bomb below looks scrambled, because its HTML source code is wrong. Just drag and drop parts of the source code that look like <span class="sample-swappable">this</span> to swap them and make things right.</aside>
 <h1 id="win">Yay, you unscrambled it!</h1>
 <div id="puzzle">
   <div class="column">
@@ -166,6 +166,18 @@ jQuery.fn.extend({
   }
 });
 
+function showWinState(isWon) {
+  if (isWon) {
+    $("#win").fadeIn();
+    $(".scrambled").hide();
+    $(".scrambled-block").css({visibility: "hidden"});
+  } else {
+    $("#win").fadeOut();
+    $(".scrambled").show();
+    $(".scrambled-block").css({visibility: "hidden"});
+  }
+}
+
 $(window).load(function() {
   var frame = $("iframe").contents();
   var code = $("body", frame).renderDom().appendTo("div.code");
@@ -175,13 +187,7 @@ $(window).load(function() {
   swappables.each(function() {
     $(this).data("properValue", $(this).text());
   }).scramble().makeSwappable().bind("textchanged", function() {
-    if (!swappables.scrambled()) {
-      $("#win").fadeIn();
-      $(".scrambled").hide();
-    } else {
-      $("#win").fadeOut();
-      $(".scrambled").show();
-    }
+    showWinState(!swappables.scrambled());
   });
 });
 </script>
