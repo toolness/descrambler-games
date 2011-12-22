@@ -36,6 +36,19 @@ div.code .text, div.code .value {
   cursor: pointer;
 }
 
+div.element > div.start > ul.attributes div.value-wrap {
+  display: inline;
+  color: rgba(255,255,255,0.7);
+}
+
+div.element > div.start > ul.attributes div.value-wrap:before {
+  content: '"';
+}
+
+div.element > div.start > ul.attributes div.value-wrap:after {
+  content: '"';
+}
+
 div.code .text:hover, div.code .value:hover {
   background: rgba(0, 0, 0, 0.25);
 }
@@ -140,6 +153,7 @@ $(window).load(function() {
   var code = $("body", frame).renderDom().appendTo("div.code");
   var swappables = code.find(".text, .value");
   
+  code.find("div.value").wrap('<div class="value-wrap"></div>');
   swappables.each(function() {
     $(this).data("properValue", $(this).text());
   }).scramble().makeSwappable().bind("textchanged", function() {

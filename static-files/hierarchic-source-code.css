@@ -15,7 +15,7 @@ div.element div.name {
 }
 
 div.element div.value {
-  display: inline-block;
+  display: inline;
 }
 
 li > div.element {
@@ -62,16 +62,6 @@ div.element > div.start > ul.attributes div.name:after {
 
 div.element > div.start > ul.attributes div.value {
   color: white;
-}
-
-div.element > div.start > ul.attributes div.value:before {
-  content: '"';
-  color: rgba(255,255,255,0.7);
-}
-
-div.element > div.start > ul.attributes div.value:after {
-  content: '"';
-  color: rgba(255,255,255,0.7);
 }
 
 div.element > ul.children {
