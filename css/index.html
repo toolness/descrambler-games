@@ -28,6 +28,7 @@ ul.css-rules div.value {
   cursor: pointer;
 }
 
+ul.css-rules div.value.drag-over,
 ul.css-rules div.value:hover {
   color: black;
   background: yellow;
@@ -111,7 +112,7 @@ jQuery.fn.extend({
   renderCssRules: function() {
     var rules = $('<ul class="css-rules"></ul>');
     this.eachCssRule(function() {
-      var rule = $('<li></li>');
+      var rule = $('<li class="rule"></li>');
       var selector = $('<div class="selector"></div>');
       var style = $('<ul class="style"></ul>');
       var props = getStyleProperties(this.style);
@@ -129,12 +130,103 @@ jQuery.fn.extend({
         .appendTo(rules);
     });
     return rules;
+  },
+  makeSwappable: function() {
+    var dragTarget = null;
+    var dropTarget = null;
+    var tentativeStyleSwap = null;
+    
+    this.attr("draggable", "true");
+    this.bind("dragstart", function(evt) {
+      evt.originalEvent.dataTransfer.setData('text/plain', $(this).text());
+      dragTarget = this;
+      tentativeStyleSwap = null;
+    }).bind("dragover", function(evt) {
+      if (tentativeStyleSwap) {
+        if (tentativeStyleSwap.isValid)
+          evt.preventDefault();
+        return;
+      }
+      if (dragTarget && dragTarget != this) {
+        tentativeStyleSwap = new TemporaryStyleSwap(dragTarget, this);
+        if (tentativeStyleSwap.isValid) {
+          $(this).addClass("drag-over");
+          evt.preventDefault();
+        }
+      }
+    }).bind("dragleave", function(evt) {
+      if (tentativeStyleSwap && tentativeStyleSwap.isValid) {
+        $(this).removeClass("drag-over");
+        tentativeStyleSwap.undo();
+      }
+      tentativeStyleSwap = null;
+    }).bind("drop", function(evt) {
+      $(this).removeClass("drag-over");
+      evt.preventDefault();
+      dropTarget = this;
+    }).bind("dragend", function(evt) {
+      if (dragTarget && dropTarget) {
+        var temp = $(dragTarget).text();
+        $(dragTarget).text($(dropTarget).text());
+        $(dropTarget).text(temp);
+      }
+      dragTarget = null;
+      dropTarget = null;
+      tentativeStyleSwap = null;
+    });
+    
+    return this;
   }
 });
 
-function setStyleProperties(style, props) {
-  for (var name in props)
-    style.setProperty(name, props[name], "");
+function TemporaryStyleSwap(a, b) {
+  var aStyle = $(a).closest(".rule").data("linkedRule").style;
+  var bStyle = $(b).closest(".rule").data("linkedRule").style;
+  var aProp = $(a).prev().text();
+  var bProp = $(b).prev().text();
+
+  this.aChange = new TemporaryStyleChange(aStyle, aProp, $(b).text());
+  this.bChange = new TemporaryStyleChange(bStyle, bProp, $(a).text());
+  this.isValid = this.aChange.isValid && this.bChange.isValid;
+  if (!this.isValid) {
+    this.aChange.undo();
+    this.bChange.undo();
+  }
+}
+
+TemporaryStyleSwap.prototype = {
+  undo: function() {
+    if (this.isValid) {
+      this.aChange.undo();
+      this.bChange.undo();
+    }
+  }
+};
+
+function TemporaryStyleChange(style, property, value) {
+  this.style = style;
+  this.property = property;
+  this.value = value;
+  this.oldValue = style.getPropertyValue(property);
+  
+  style.setProperty(property, value, "");
+  
+  this.isValid = (style.getPropertyValue(property) == value);
+  if (!this.isValid)
+    style.setProperty(property, this.oldValue, "");
+}
+
+TemporaryStyleChange.prototype = {
+  undo: function() {
+    if (this.isValid)
+      this.style.setProperty(this.property, this.oldValue, "");
+  }
+};
+
+function isValidCss(property, value) {
+  var span = document.createElement("span");
+  span.style.setProperty(property, value, "");
+  return (span.style.getPropertyValue(property) == value);
 }
 
 function getStyleProperties(style) {
@@ -148,5 +240,6 @@ function getStyleProperties(style) {
 
 $(window).ready(function() {
   $(".sample style.remixable").renderCssRules().appendTo(".css.column");
+  $(".css-rules .value").makeSwappable();
 });
 </script>
