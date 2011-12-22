@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>Hello there.</title>
+<style>
+body {
+  width: 900px;
+  margin: 0 auto;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: small;
+}
+
+div.column {
+  display: inline-block;
+  vertical-align: top;
+  width: 450px;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+/* Swappables */
+
+ul.css-rules div.value {
+  color: white;
+  background: black;
+  padding: 3px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+ul.css-rules div.value:hover {
+  color: black;
+  background: yellow;
+}
+
+/* CSS code styling */
+
+ul.css-rules {
+  margin: 0px;
+  list-style-type: none;
+  padding-left: 0px;
+  font-family: Monaco, "Lucida Console", monospace;
+  font-size: smaller;
+}
+
+ul.css-rules > li {
+  line-height: 2em;
+}
+ul.css-rules > li > div.selector {
+  display: inline;
+}
+
+ul.css-rules > li > div.selector:after {
+  content: ' {';
+}
+
+ul.css-rules > li > ul.style {
+  list-style-type: none;
+  padding-left: 1em;
+}
+
+ul.css-rules > li > ul.style > li.property > div.name,
+ul.css-rules > li > ul.style > li.property > div.value {
+  display: inline;
+}
+
+ul.css-rules > li > ul.style > li.property > div.name:after {
+  content: ': ';
+}
+
+ul.css-rules > li > ul.style > li.property:after {
+  content: ';';
+}
+
+ul.css-rules > li:after {
+  content: '}';
+}
+</style>
+<div class="css column">
+  <h2>CSS</h2>
+</div><div class="sample column">
+  <style>
+  section {
+    padding: 10px;
+  }
+  </style>
+  <style class="remixable">
+  section {
+    font-family: 'Comic Sans MS';
+    font-size: 200%;
+    background-color: #f0f0f0;
+  }
+
+  section em {
+    color: steelblue;
+  }
+  </style>
+  <h2>Page</h2>
+  <section>this is <em>sample text</em>.</section>
+</div>
+<script src="jquery.min.js"></script>
+<script>
+jQuery.fn.extend({
+  eachCssRule: function(cb) {
+    this.each(function() {
+      for (var i = 0; i < this.sheet.cssRules.length; i++)
+        cb.call(this.sheet.cssRules[i]);
+    });
+    return this;
+  },
+  renderCssRules: function() {
+    var rules = $('<ul class="css-rules"></ul>');
+    this.eachCssRule(function() {
+      var rule = $('<li></li>');
+      var selector = $('<div class="selector"></div>');
+      var style = $('<ul class="style"></ul>');
+      var props = getStyleProperties(this.style);
+      selector.text(this.selectorText).appendTo(rule);
+      for (var name in props) {
+        var property = $('<li class="property"></li>').appendTo(style);
+        var propertyName = $('<div class="name"></div>');
+        var propertyValue = $('<div class="value"></div>');
+        propertyName.text(name).appendTo(property);
+        propertyValue.text(props[name]).appendTo(property);
+      }
+      rule.data("linkedRule", this)
+        .append(selector)
+        .append(style)
+        .appendTo(rules);
+    });
+    return rules;
+  }
+});
+
+function setStyleProperties(style, props) {
+  for (var name in props)
+    style.setProperty(name, props[name], "");
+}
+
+function getStyleProperties(style) {
+  var props = {};
+  for (var i = 0; i < style.length; i++) {
+    var name = style[i];
+    props[name] = style.getPropertyValue(name);
+  }
+  return props;
+}
+
+$(window).ready(function() {
+  $(".sample style.remixable").renderCssRules().appendTo(".css.column");
+});
+</script>
