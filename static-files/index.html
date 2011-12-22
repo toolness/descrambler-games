@@ -12,24 +12,20 @@ body {
   position: relative;
 }
 
-div.code {
+div.column {
   display: inline-block;
   vertical-align: top;
   width: 512px;
-  padding-right: 10px;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
+  padding: 5px;
 }
 
 iframe {
-  display: inline-block;
-  width: 512px;
-  height: 270px;
+  width: 100%;
+  height: 300px;
   border: none;
-  -moz-box-sizing: border-box;
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
 }
 
 div.code {
@@ -89,16 +85,18 @@ h1#win {
   padding: 10px;
   display: none;
 }
-
-div#puzzle {
-  padding-top: 1em;
-}
 </style>
 <h1>This page is messed up! Can you fix it?</h1>
 <aside>The love bomb below looks scrambled, because its HTML source code is wrong. Just drag and drop parts of the source code that look like <span class="sample-swappable">this</span> to swap them and make things right.</aside>
 <h1 id="win">Yay, you unscrambled it!</h1>
 <div id="puzzle">
-  <div class="code"></div><iframe src="atul.html" scrolling="no"></iframe>
+  <div class="column">
+    <h2>The <span class="scrambled">scrambled</span> HTML</h2>
+    <div class="code"></div>
+  </div><div class="column">
+    <h2>The <span class="scrambled">scrambled</span> love bomb</h2>
+    <iframe src="atul.html" scrolling="no"></iframe>
+  </div>
 </div>
 <script src="jquery.min.js"></script>
 <script src="utils.js"></script>
@@ -177,10 +175,13 @@ $(window).load(function() {
   swappables.each(function() {
     $(this).data("properValue", $(this).text());
   }).scramble().makeSwappable().bind("textchanged", function() {
-    if (!swappables.scrambled())
+    if (!swappables.scrambled()) {
       $("#win").fadeIn();
-    else
+      $(".scrambled").hide();
+    } else {
       $("#win").fadeOut();
+      $(".scrambled").show();
+    }
   });
 });
 </script>
