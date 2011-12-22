@@ -194,9 +194,7 @@ $(window).load(function() {
     overlay.unfocus();
   });
   $("div.code").mousemove(function(evt) {
-    var target = $(evt.target).closest("div.element");
-    var linked = target.data("linkedNode");
-    overlay.set(linked);
+    overlay.set($(evt.target).closest("div.element").data("linkedNode"));
   }).mouseout(function(evt) {
     overlay.unfocus();
   });
