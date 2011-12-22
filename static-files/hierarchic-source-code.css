@@ -28,8 +28,6 @@ li > div.element {
 }
 
 div.element > div.start, div.element > div.end {
-  background: rgba(0,0,0,0.5);
-  color: white;
 }
 
 div.element > div.start:before {
@@ -53,7 +51,6 @@ div.element > div.start > ul.attributes {
 }
 
 div.element > div.start > ul.attributes div.name {
-  color: rgba(255,255,255,0.7);
 }
 
 div.element > div.start > ul.attributes div.name:before {
