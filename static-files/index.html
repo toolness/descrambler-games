@@ -101,6 +101,8 @@ h1#win {
 <script src="jquery.min.js"></script>
 <script src="utils.js"></script>
 <script src="tag-colors.js"></script>
+<script src="event-emitter.js"></script>
+<script src="focused-overlay.js"></script>
 <script src="render-dom.js"></script>
 <script>
 jQuery.fn.extend({
@@ -179,6 +181,7 @@ function showWinState(isWon) {
 }
 
 $(window).load(function() {
+  var overlay = jQuery.focusedOverlay();
   var frame = $("iframe").contents();
   var code = $("body", frame).renderDom().appendTo("div.code");
   var swappables = code.find(".text, .value");
@@ -188,6 +191,14 @@ $(window).load(function() {
     $(this).data("properValue", $(this).text());
   }).scramble().makeSwappable().bind("textchanged", function() {
     showWinState(!swappables.scrambled());
+    overlay.unfocus();
+  });
+  $("div.code").mousemove(function(evt) {
+    var target = $(evt.target).closest("div.element");
+    var linked = target.data("linkedNode");
+    overlay.set(linked);
+  }).mouseout(function(evt) {
+    overlay.unfocus();
   });
 });
 </script>
