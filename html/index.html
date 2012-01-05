@@ -32,13 +32,18 @@ div.code {
   cursor: default;
 }
 
-span.sample-swappable {
+span.sample.swappable {
   cursor: auto;
 }
 
-.sample-swappable,
 div.code div.text,
 div.code div.element > div.start > ul.attributes div.value {
+  color: black;
+}
+
+.swappable,
+div.code div.text.swappable,
+div.code div.element > div.start > ul.attributes div.value.swappable {
   color: white;
   padding: 2px;
   border-radius: 3px;
@@ -63,8 +68,8 @@ div.element > div.start > ul.attributes div.value-wrap:after {
   content: '"';
 }
 
-div.code div.text:hover,
-div.code div.element > div.start > ul.attributes div.value:hover {
+div.code div.text.swappable:hover,
+div.code div.element > div.start > ul.attributes div.value.swappable:hover {
   background: yellow;
   color: black;
 }
@@ -87,7 +92,7 @@ h1#win {
 }
 </style>
 <h1 class="scrambled-block">This page is messed up! Can you fix it?</h1>
-<aside class="scrambled-block">The love bomb below looks scrambled, because its HTML source code is wrong. Just drag and drop parts of the source code that look like <span class="sample-swappable">this</span> to swap them and make things right.</aside>
+<aside class="scrambled-block">The love bomb below looks scrambled, because its HTML source code is wrong. Just drag and drop parts of the source code that look like <span class="sample swappable">this</span> to swap them and make things right.</aside>
 <h1 id="win">Yay, you unscrambled it!</h1>
 <div id="puzzle">
   <div class="column">
@@ -187,7 +192,7 @@ $(window).load(function() {
   var swappables = code.find(".text, .value");
   
   code.find("div.value").wrap('<div class="value-wrap"></div>');
-  swappables.each(function() {
+  swappables.addClass("swappable").each(function() {
     $(this).data("properValue", $(this).text());
   }).scramble().makeSwappable().bind("textchanged", function() {
     showWinState(!swappables.scrambled());
