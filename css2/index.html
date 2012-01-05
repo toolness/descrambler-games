@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>CSS Descrambler #2</title>
+<style>
+div.column {
+  display: inline-block;
+  vertical-align: top;
+  width: 50%;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  padding: 5px;
+}
+
+li.rule {
+  font-family: "Monaco", "Lucida Console", monospace;
+  font-size: small;
+}
+
+ul.rules, li.rule ul {
+  list-style-type: none;
+  margin: 0px;
+  padding: 0px;
+}
+
+li.rule ul {
+  padding-left: 1em;
+}
+
+li.rule ul .name {
+  font-weight: bold;
+}
+
+li.rule ul .name:after {
+  content: ': ';
+}
+
+li.rule ul .value:after {
+  content: ';';
+}
+
+li.rule .selector:after {
+  content: ' {';
+  color: gray;
+}
+
+li.rule {
+  padding-bottom: 1em;
+}
+
+li.rule:after {
+  content: '}';
+  color: gray;
+}
+
+li.rule ul.ui-sortable {
+  min-height: 1em;
+}
+
+li.rule ul.ui-sortable li.declaration {
+  cursor: pointer;
+}
+
+li.rule ul.ui-sortable li.declaration:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.ui-sortable-placeholder {
+  visibility: visible !important;
+  background: pink;
+}
+
+div.column.sample * {
+  -moz-transition: padding 1s;
+}
+</style>
+<style class="remixable">
+p {
+  color: blue;
+  background: url(http://seriouscat.com/serious_cat_is_serious.jpg);
+}
+
+em {
+  color: black;
+  background: yellow;
+  padding: 10px;
+}
+</style>
+<div class="column css"></div><div class="column sample">
+  <p>Yo, I am some text, <em>bro</em>.</p>
+</div>
+<script src="jquery.min.js"></script>
+<script src="jquery-ui-1.8.16.custom.min.js"></script>
+<script>
+function parseCss(str) {
+  var rules = [];
+  var lines = str.split("\n");
+  var selectorStart = /(.+?) \{$/;
+  var decl = /  (.+?): (.+?);/;
+  var currRule = null;
+  
+  lines.forEach(function(line) {
+    if (currRule) {
+      if (line == "}") {
+        rules.push(currRule);
+        currRule = null;
+      } else {
+        var declMatch = line.match(decl);
+        if (declMatch) {
+          currRule.declarations.push({
+            name: declMatch[1],
+            value: declMatch[2]
+          });
+        }
+      }
+    } else {
+      var selMatch = line.match(selectorStart);
+      if (selMatch) {
+        currRule = {
+          selector: selMatch[1],
+          declarations: []
+        };
+      }
+    }
+  });
+  return rules;
+}
+
+jQuery.extend({
+  cssToDom: function(rules) {
+    var domRules = $('<ul class="rules"></ul>');
+    rules.forEach(function(rule) {
+      var domRule = $('<li class="rule"><span class="selector">' + 
+                      '</span><ul></ul></li>');
+      domRule.find(".selector").text(rule.selector);
+      rule.declarations.forEach(function(decl) {
+        var domDecl = $('<li class="declaration">' +
+                        '<span class="name"></span>' +
+                        '<span class="value"></span></li>');
+        domDecl.find('.name').text(decl.name);
+        domDecl.find('.value').text(decl.value);
+        domDecl.appendTo(domRule.find('ul'));
+      });
+      domRule.appendTo(domRules);
+    });
+    return domRules;
+  }
+});
+
+jQuery.fn.extend({
+  toCssText: function() {
+    var lines = [];
+    $("li.rule").each(function() {
+      lines.push($(".selector", this).text() + " {");
+      $("li.declaration", this).each(function() {
+        lines.push("  " + $(".name", this).text() + ": " +
+                          $(".value", this).text() + ";");
+      });
+      lines.push("}\n");
+    });
+    return lines.join("\n");
+  }
+});
+
+$(window).ready(function() {
+  var rules = parseCss($("style.remixable").text());
+  var domRules = jQuery.cssToDom(rules);
+  $(".column.css").append(domRules);
+  $("li.rule ul").sortable({
+    connectWith: "li.rule ul",
+    update: function(ui, event) {
+      $("style.remixable").text(domRules.toCssText());
+    }
+  });
+});
+</script>
