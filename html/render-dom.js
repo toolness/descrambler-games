@@ -11,6 +11,7 @@
       var value = $('<div class="value"></div>').text(attr.value);
       value.data("linked-node", attr);
       attribs.append($('<li></li>').append(name).append(value));
+      value.wrap('<div class="value-wrap"></div>');
     }
     return attribs;
   }

@@ -36,11 +36,6 @@ span.sample.swappable {
   cursor: auto;
 }
 
-div.code div.text,
-div.code div.element > div.start > ul.attributes div.value {
-  color: black;
-}
-
 .swappable,
 div.code div.text.swappable,
 div.code div.element > div.start > ul.attributes div.value.swappable {
@@ -52,20 +47,8 @@ div.code div.element > div.start > ul.attributes div.value.swappable {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
-div.element > div.start > ul.attributes div.value-wrap {
-  display: inline;
-}
-
 div.element > div.start {
   line-height: 1.75em;
-}
-
-div.element > div.start > ul.attributes div.value-wrap:before {
-  content: '"';
-}
-
-div.element > div.start > ul.attributes div.value-wrap:after {
-  content: '"';
 }
 
 div.code div.text.swappable:hover,
@@ -191,7 +174,6 @@ $(window).load(function() {
   var code = $("body", frame).renderDom().appendTo("div.code");
   var swappables = code.find(".text, .value");
   
-  code.find("div.value").wrap('<div class="value-wrap"></div>');
   swappables.addClass("swappable").each(function() {
     $(this).data("properValue", $(this).text());
   }).scramble().makeSwappable().bind("textchanged", function() {

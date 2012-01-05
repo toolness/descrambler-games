@@ -27,7 +27,16 @@ li > div.element {
   margin-top: 0.5em;  
 }
 
-div.element > div.start, div.element > div.end {
+div.element > div.start > ul.attributes div.value-wrap {
+  display: inline;
+}
+
+div.element > div.start > ul.attributes div.value-wrap:before {
+  content: '"';
+}
+
+div.element > div.start > ul.attributes div.value-wrap:after {
+  content: '"';
 }
 
 div.element > div.start:before {
@@ -36,9 +45,6 @@ div.element > div.start:before {
 
 div.element > div.start:after {
   content: '>';
-}
-
-div.element > div.start > div.name {
 }
 
 div.element li {
@@ -50,19 +56,12 @@ div.element > div.start > ul.attributes {
   padding: 0;
 }
 
-div.element > div.start > ul.attributes div.name {
-}
-
 div.element > div.start > ul.attributes div.name:before {
   content: ' ';
 }
 
 div.element > div.start > ul.attributes div.name:after {
   content: '=';
-}
-
-div.element > div.start > ul.attributes div.value {
-  color: white;
 }
 
 div.element > ul.children {
