@@ -18,6 +18,10 @@ div.column {
   box-sizing: border-box;
 }
 
+div.sample.column {
+  position: fixed;
+}
+
 /* Swappables */
 
 ul.css-rules div.value {
@@ -76,47 +80,50 @@ ul.css-rules > li > ul.style > li.property:after {
 ul.css-rules > li:after {
   content: '}';
 }
+
+svg {
+  -moz-transform: scale(0.5);
+  -moz-transform-origin: 0% 0%;
+  -webkit-transform: scale(0.5);
+  -webkit-transform-origin: 0% 0%;
+  -o-transform: scale(0.5);
+  -o-transform-origin: 0% 0%;
+}
 </style>
 <div class="css column">
   <h2>CSS</h2>
 </div><div class="sample column">
   <style>
   div.sample.column * {
-    -moz-transition: font-size 1s, top 1s, right 1s, width 1s, height 1s;
-    -webkit-transition: font-size 1s, top 1s, right 1s, width 1s, height 1s;
-  }
-  
-  section {
-    padding: 10px;
+    -moz-transition: opacity 1s;
+    -webkit-transition: opacity 1s;
+    -o-transition: opacity 1s;
   }
   </style>
   <style class="remixable">
-  section {
-    font-family: Futura, sans-serif;
-    font-size: 30px;
-    background-color: #f0f0f0;
-    background-image: none;
-    position: relative;
-  }
-
-  section em {
-    font-family: Baskerville, serif;
-    font-size: 40px;
-    color: steelblue;
+  svg {
+    background-color: black;
   }
   
-  div.picture {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    width: 50px;
-    height: 50px;
-    background-image: -moz-linear-gradient(top, red, pink);
-    background-image: -webkit-linear-gradient(top, red, pink);
+  svg g#web {
+    fill: white;
+  }
+  
+  svg g#compression_tank .st0 {
+    opacity: 1.0;
+    fill: black;
+  }
+
+  svg g#bat {
+    opacity: 0.33;
+  }
+  
+  svg g#spider {
+    fill: #66CCCC;
   }
   </style>
   <h2>Page</h2>
-  <section>this is <em>sample text</em>. <div class="picture"></div></section>
+  <section></section>
 </div>
 <script src="jquery.min.js"></script>
 <script>
@@ -258,7 +265,12 @@ function getStyleProperties(style) {
 }
 
 $(window).ready(function() {
-  $(".sample style.remixable").renderCssRules().appendTo(".css.column");
-  $(".css-rules .value").makeSwappable();
+  $.get("guy.svg", function(data) {
+    $(".sample section").append(data.documentElement);
+    //var styles = $(".sample section style");
+    $("style.remixable").renderCssRules().appendTo(".css.column");
+    $(".css-rules .value").makeSwappable();
+    //$("g#head").attr("transform", "translate(-100)");
+  });
 });
 </script>
