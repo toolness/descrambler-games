@@ -148,13 +148,21 @@ jQuery.extend({
 });
 
 jQuery.fn.extend({
-  toCssText: function() {
+  toCssText: function(options) {
     var lines = [];
+    options = options || {};
     $("li.rule").each(function() {
       lines.push($(".selector", this).text() + " {");
       $("li.declaration", this).each(function() {
-        lines.push("  " + $(".name", this).text() + ": " +
-                          $(".value", this).text() + ";");
+        var self = this;
+        if (options.draggedItem) {
+          if ($(this).hasClass("ui-sortable-helper"))
+            return;
+          if ($(this).hasClass("ui-sortable-placeholder"))
+            self = options.draggedItem;
+        }
+        lines.push("  " + $(".name", self).text() + ": " +
+                          $(".value", self).text() + ";");
       });
       lines.push("}\n");
     });
@@ -168,8 +176,13 @@ $(window).ready(function() {
   $(".column.css").append(domRules);
   $("li.rule ul").sortable({
     connectWith: "li.rule ul",
-    update: function(ui, event) {
+    update: function(event, ui) {
       $("style.remixable").text(domRules.toCssText());
+    },
+    change: function(event, ui) {
+      $("style.remixable").text(domRules.toCssText({
+        draggedItem: ui.item
+      }));
     }
   });
 });
