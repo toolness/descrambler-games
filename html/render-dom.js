@@ -60,11 +60,12 @@
       var end = $('<div class="end"></div>').append(name.clone());
       rendered.append(children).append(end);
     }
-    rendered.addClass('tag-' + jQuery.colorForTag(name.text()).slice(1));
     if (options.isMonochrome) {
       rendered.css({backgroundColor: "rgba(0, 0, 0, 0.1)"});
-    } else
+    } else {
+      rendered.addClass('tag-' + jQuery.colorForTag(name.text()).slice(1));
       rendered.applyTagColor(node, 0.33);
+    }
     rendered.data("linked-node", node);
     return rendered;
   }
