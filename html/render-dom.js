@@ -23,7 +23,7 @@
     return div;
   }
   
-  function renderElement(node) {
+  function renderElement(node, options) {
     node = $(node).get(0);
     
     var rendered = $('<div class="element"></div>');
@@ -49,7 +49,7 @@
         break;
         
         case this.ELEMENT_NODE:
-        item.append(renderElement(this));
+        item.append(renderElement(this, options));
         children.append(item);
         break;
 
@@ -61,14 +61,17 @@
       rendered.append(children).append(end);
     }
     rendered.addClass('tag-' + jQuery.colorForTag(name.text()).slice(1));
-    rendered.applyTagColor(node, 0.33);
+    if (options.isMonochrome) {
+      rendered.css({backgroundColor: "rgba(0, 0, 0, 0.1)"});
+    } else
+      rendered.applyTagColor(node, 0.33);
     rendered.data("linked-node", node);
     return rendered;
   }
     
   jQuery.fn.extend({
-    renderDom: function renderDom() {
-      return renderElement(this);
+    renderDom: function renderDom(options) {
+      return renderElement(this, options || {});
     }
   });
 })(jQuery);
