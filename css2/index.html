@@ -188,7 +188,9 @@ jQuery.fn.extend({
 $(window).ready(function() {
   var rules = parseCss($("style.remixable").text());
   var domRules = jQuery.cssToDom(rules);
-  $(".column.sample > p").renderDom().appendTo(".column.html");
+  $(".column.sample > p").renderDom({
+    isMonochrome: true
+  }).appendTo(".column.html");
   $(".column.css").append(domRules);
   $("li.rule ul").sortable({
     connectWith: "li.rule ul",
