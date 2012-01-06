@@ -96,17 +96,34 @@ div.column.sample * {
 }
 </style>
 <style class="remixable">
-p {
-  color: white;
-  background: url(http://seriouscat.com/serious_cat_is_serious.jpg);
-  font-size: x-large;
-  padding: 2px;
+section {
+  background: slateblue;
+  padding: 10px;
+  border-radius: 4px;
+  font-family: cursive;
 }
 
-em {
-  color: black;
-  background: yellow;
+section a {
+  color: lightblue;
+  text-decoration: none;
+}
+
+section a:hover {
+  text-decoration: underline;
+}
+
+section p {
+  color: white;
+  background: rgba(0, 0, 0, 0.25);
   padding: 10px;
+  border-radius: 8px;
+}
+
+section em {
+  color: yellow;
+}
+
+section li {
 }
 </style>
 <div class="column css">
@@ -115,7 +132,13 @@ em {
   <h2>HTML</h2>
 </div><div class="column sample">
   <h2>Preview</h2>
-  <p>Yo, I am some text, <em>bro</em>.</p>
+  <section>
+    <p>Things I like about <a href="http://en.wikipedia.org/wiki/Beets">beets</a>:</p>
+    <ul>
+      <li>They're <em>tasty</em>!
+      <li>They're <em>purple</em>!
+    </ul>
+  </section>
 </div>
 <script src="jquery.min.js"></script>
 <script src="jquery-ui-1.8.16.custom.min.js"></script>
