@@ -47,6 +47,7 @@ li.rule ul .value:after {
 li.rule .selector:after {
   content: ' {';
   color: gray;
+  background: white !important;
 }
 
 li.rule {
@@ -73,6 +74,16 @@ li.rule ul.ui-sortable li.declaration:hover {
 .ui-sortable-placeholder {
   visibility: visible !important;
   background: pink;
+}
+
+div.column.css .selector:hover {
+  cursor: default;
+}
+
+div.column.css .selector:hover,
+div.column.html .part-of-selector {
+  background: firebrick !important;
+  color: white !important;
 }
 
 div.column.sample * {
@@ -163,6 +174,13 @@ jQuery.extend({
 });
 
 jQuery.fn.extend({
+  mapReverseLinkedNodes: function() {
+    this.find(".element").add(this).each(function() {
+      var linked = $(this).data("linkedNode");
+      $(linked).data("reverseLinkedNode", this);
+    });
+    return this;
+  },
   toCssText: function(options) {
     var lines = [];
     options = options || {};
@@ -190,7 +208,7 @@ $(window).ready(function() {
   var domRules = jQuery.cssToDom(rules);
   $(".column.sample > p").renderDom({
     isMonochrome: true
-  }).appendTo(".column.html");
+  }).mapReverseLinkedNodes().appendTo(".column.html");
   $(".column.css").append(domRules);
   $("li.rule ul").sortable({
     connectWith: "li.rule ul",
@@ -202,6 +220,15 @@ $(window).ready(function() {
         draggedItem: ui.item
       }));
     }
+  });
+  $("li.rule .selector").hover(function() {
+    var selector = $(this).text();
+    $(".column.sample").find(selector).each(function() {
+      var e = $(this).data("reverseLinkedNode");
+      $(e).addClass("part-of-selector");
+    });
+  }, function() {
+    $(".part-of-selector").removeClass("part-of-selector");
   });
 });
 </script>
