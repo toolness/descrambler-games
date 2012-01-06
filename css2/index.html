@@ -2,6 +2,7 @@
 <meta charset="utf-8">
 <title>CSS Descrambler #2</title>
 <link rel="stylesheet" href="../html/hierarchic-source-code.css">
+<link rel="stylesheet" href="../html/atul-files/webxray.css">
 <style>
 body {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -84,6 +85,10 @@ div.column.css .selector:hover,
 div.column.html .part-of-selector {
   background: firebrick !important;
   color: white !important;
+}
+
+.webxray-overlay.part-of-selector {
+  background: rgba(255, 0, 0, 0.5);
 }
 
 div.column.sample * {
@@ -225,9 +230,11 @@ $(window).ready(function() {
     $(".column.sample").find(selector).each(function() {
       var e = $(this).data("reverseLinkedNode");
       $(e).addClass("part-of-selector");
+      var overlay = $(this).overlay().addClass("part-of-selector");
     });
   }, function() {
     $(".part-of-selector").removeClass("part-of-selector");
+    $(".webxray-overlay.part-of-selector").remove();
   });
 });
 </script>
