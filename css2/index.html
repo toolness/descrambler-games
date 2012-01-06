@@ -1,11 +1,16 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 <title>CSS Descrambler #2</title>
+<link rel="stylesheet" href="../html/hierarchic-source-code.css">
 <style>
+body {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
 div.column {
   display: inline-block;
   vertical-align: top;
-  width: 50%;
+  width: 33%;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
@@ -88,11 +93,19 @@ em {
   padding: 10px;
 }
 </style>
-<div class="column css"></div><div class="column sample">
+<div class="column css">
+  <h2>CSS</h2>
+</div><div class="column html">
+  <h2>HTML</h2>
+</div><div class="column sample">
+  <h2>Preview</h2>
   <p>Yo, I am some text, <em>bro</em>.</p>
 </div>
 <script src="jquery.min.js"></script>
 <script src="jquery-ui-1.8.16.custom.min.js"></script>
+<script src="../html/utils.js"></script>
+<script src="../html/tag-colors.js"></script>
+<script src="../html/render-dom.js"></script>
 <script>
 function parseCss(str) {
   var rules = [];
@@ -175,6 +188,7 @@ jQuery.fn.extend({
 $(window).ready(function() {
   var rules = parseCss($("style.remixable").text());
   var domRules = jQuery.cssToDom(rules);
+  $(".column.sample > p").renderDom().appendTo(".column.html");
   $(".column.css").append(domRules);
   $("li.rule ul").sortable({
     connectWith: "li.rule ul",
